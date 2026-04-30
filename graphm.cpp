@@ -1,7 +1,7 @@
 #include "graphm.h"
 #include <fstream>
 
-#define INFINITY 1e9 //one billion
+#define INFINITY 100//one billion
 
 GraphM::GraphM(){
     size = 0;
@@ -34,12 +34,22 @@ int GraphM::buildGraph(ifstream& file){
         std::cerr << "Unable to open file!";
         return -1;
     }
-
+    
+    //MAXNODES = size ??
+    
     //read size
     file >> size;
+    //for tesing 
     cout << size;
 
-    //MAXNODES = size ?
+    string line; 
+
+    for(int i = 0; i <= size; ++i){
+        getline(file, line);
+        cout << line << endl;
+        vertices[i] = line;
+    }
+
 
     //read vertices
     //file.ignore() //need to ignore \n new lines
