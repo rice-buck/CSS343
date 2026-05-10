@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 
-#define MAXNODES 4 //not sure how this should be defined?
+#define MAXNODES 100 //not sure how this should be defined?
 
 
 using namespace std;

@@ -1,7 +1,8 @@
 #include "graphm.h"
 #include <fstream>
+#include <sstream>
 
-#define INFINITY 100//one billion
+#define INF 100 //one billion
 
 GraphM::GraphM(){
     size = 0;
@@ -14,7 +15,7 @@ GraphM::GraphM(){
     //All entries of AdjM set to infinity
     for(int i = 0; i < MAXNODES; ++i){
         for(int j = 0; j < MAXNODES; ++j){
-            AdjM[i][j] = INFINITY;
+            AdjM[i][j] = INF;
         }
     }
 
@@ -22,7 +23,7 @@ GraphM::GraphM(){
     // sets all visited to false, and sets all prev_node to 0.
     for(int i = 0; i < MAXNODES; ++i){
         for(int j = 0; j < MAXNODES; ++j){
-            PathM[i][j].dist = INFINITY;
+            PathM[i][j].dist = INF;
             PathM[i][j].visited = false;
             PathM[i][j].prev_node = 0;
         }
@@ -52,7 +53,20 @@ int GraphM::buildGraph(ifstream& file){
 
 
     //read vertices
-    //file.ignore() //need to ignore \n new lines
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        int from, to, dist;
+        
+        if(ss >> from >> to >> dist){
+
+            if(from == 0 && to == 0 && dist == 0) break;
+            AdjM[from][to] = dist;
+        }
+    }
+
     file.close();
+
+    
+
     return 1;
 }
