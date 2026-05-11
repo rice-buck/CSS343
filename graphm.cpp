@@ -55,18 +55,47 @@ int GraphM::buildGraph(ifstream& file){
     //read vertices
     while (std::getline(file, line)) {
         std::stringstream ss(line);
-        int from, to, dist;
+        int from, to, cost;
         
-        if(ss >> from >> to >> dist){
+        if(ss >> from >> to >> cost){
 
-            if(from == 0 && to == 0 && dist == 0) break;
-            AdjM[from][to] = dist;
+            if(from == 0 && to == 0 && cost == 0) break;
+            AdjM[from][to] = cost;
         }
     }
 
     file.close();
 
-    
+    return 1;
+}
+
+//insert edge
+int GraphM::insertEdge(int from, int to, int cost){
+    //invalid input if from and to are less than or equal to zero, the vertices greater than size, or if the cost is negative
+    if(size < from || from <= 0 || size < to || to <= 0 || cost <= 0) return -1;
+
+    AdjM[from][to] = cost;
 
     return 1;
+}
+
+//set node edge cost to INF to remove it
+int GraphM::removeEdge(int from, int to){
+    if(size < from || from <= 0 || size < to || to <= 0) return -1;
+
+    AdjM[from][to] = INF;
+    return 1;
+}
+
+
+void GraphM::displayAllPaths(){
+    int f, t, c;
+    for(int i = 0; i < 100; ++i){
+        for(int j = 0; j < 100; ++j){
+            f = i;
+            t = j;
+            c = AdjM[f][t];
+            if(c != 100) cout << "From: " << f << "   To: " << t << "  Cost: " << c << endl;
+        }
+    }
 }

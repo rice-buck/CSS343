@@ -6,5 +6,8 @@ int main(){
     GraphM test;
     if(test.buildGraph(myFile)) cout << "\nSuccess!" << endl;
 
+    test.displayAllPaths();
+
+
     return 0;
 }
