@@ -98,4 +98,50 @@ void GraphM::displayAllPaths(){
             if(c != 100) cout << "From: " << f << "   To: " << t << "  Cost: " << c << endl;
         }
     }
+    cout << "\n Shortest from 3 to 4: " << PathM[3][4].dist << endl;
 }
+
+void GraphM::findShortestPath(){
+    
+    for(int source = 1; source <= size; ++source){
+
+    int minDistance = INF;
+    int v = -1;
+
+        PathM[source][source].dist = 0; //node dist to itself is zero
+
+        for(int i = 1; i <= size; ++i){
+            
+            //if not visited 
+            if(!PathM[source][i].visited && AdjM[source][i] < minDistance){
+                minDistance = AdjM[source][i];
+                v = i;
+                PathM[source][v].visited = true;
+                
+                //compare with each adjacent to v
+                for(int w = 1; w <= size; ++w){
+                    if(!PathM[source][w].visited && AdjM[v][w] != INF){
+
+                        PathM[source][w].dist = min(PathM[source][w].dist, PathM[source][v].dist + AdjM[v][w]);
+                    }
+                }
+            }
+        }
+    }
+        
+}
+
+    //              ---- shortest path psuedocode ----
+// for (int source = 1; source <= nodeSize; source++) {
+//       PathM[source][source].dist = 0;
+//       // finds the shortest distance from source to all other nodes
+//       for (int i = 1; i<= nodeSize; i++) {
+//           find v: not visited, shortest distance at this point
+//           mark v visited 
+//          for each w adjacent to v
+//            if (w is not visited)
+//             PathM[source][w].dist=min(PathM[source][w].dist, PathM[source][v].dist+AdjM[V][W])
+//       }
+//    }
+
+
