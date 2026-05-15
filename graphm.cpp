@@ -102,33 +102,41 @@ void GraphM::displayAllPaths(){
 }
 
 void GraphM::findShortestPath(){
-    
     for(int source = 1; source <= size; ++source){
-
-    int minDistance = INF;
-    int v = -1;
-
-        PathM[source][source].dist = 0; //node dist to itself is zero
+        PathM[source][source].dist = 0; //distance to itself is zero
 
         for(int i = 1; i <= size; ++i){
-            
-            //if not visited 
-            if(!PathM[source][i].visited && AdjM[source][i] < minDistance){
-                minDistance = AdjM[source][i];
-                v = i;
-                PathM[source][v].visited = true;
-                
-                //compare with each adjacent to v
-                for(int w = 1; w <= size; ++w){
-                    if(!PathM[source][w].visited && AdjM[v][w] != INF){
 
-                        PathM[source][w].dist = min(PathM[source][w].dist, PathM[source][v].dist + AdjM[v][w]);
+            int vDist = INF;
+            int v = -1; 
+
+            //find shortest from source to all other nodes (find v)
+            for(int findV = 1; findV <= size; ++findV){
+                if(!PathM[source][findV].visited){ //find shortest dist neighbor of source
+                    if(PathM[source][findV].dist < vDist){
+                        vDist = PathM[source][findV].dist;
+                        v = findV;
+                    }
+                }
+            }
+
+            if (v == -1) break; //if a node is disconnected, then v will remain -1
+
+            //mark v visited
+            PathM[source][v].visited = true;
+            PathM[source][v].dist = vDist;
+
+            //explore each w adjacent to v
+            for(int w = 1; w <= size; ++w){
+                if(!PathM[source][w].visited && AdjM[v][w] != INF){
+                    if(PathM[source][v].dist + AdjM[v][w] < PathM[source][w].dist){
+                        PathM[source][w].dist = PathM[source][v].dist + AdjM[v][w];
+                        PathM[source][w].prev_node = v;
                     }
                 }
             }
         }
     }
-        
 }
 
     //              ---- shortest path psuedocode ----
