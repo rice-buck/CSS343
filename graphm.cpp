@@ -1,6 +1,8 @@
 #include "graphm.h"
 #include <fstream>
 #include <sstream>
+#include <stack>
+#include <vector>
 
 #define INF 100 //one billion
 
@@ -35,8 +37,6 @@ int GraphM::buildGraph(ifstream& file){
         std::cerr << "Unable to open file!";
         return -1;
     }
-    
-    //MAXNODES = size ??
     
     //read size
     file >> size;
@@ -89,17 +89,42 @@ int GraphM::removeEdge(int from, int to){
 
 
 void GraphM::displayAllPaths(){
-    int f, t, c;
-    for(int i = 0; i < 100; ++i){
-        for(int j = 0; j < 100; ++j){
-            f = i;
-            t = j;
-            c = AdjM[f][t];
-            if(c != 100) cout << "From: " << f << "   To: " << t << "  Cost: " << c << endl;
+    cout << "Description     \tFrom_node\tTo_node \tDistance\tPath\n" << endl;
+    for (int source = 1; source <= size; ++source){
+        cout << vertices[source] << endl;
+        for(int to = 1; to <= size; ++to){
+            if(source != to){
+                string dist;
+                if(PathM[source][to].dist != INF) dist = to_string(PathM[source][to].dist);
+                else dist = "---";
+
+                cout << "\t\t\t" << source << "\t\t" << to << "\t\t" << dist << "\t\t";
+
+                //print path
+                if(dist != "---"){
+                    stack<int> prevNode;
+                    int toPath = to;
+                    
+                    while(PathM[source][toPath].prev_node != 0){
+                        prevNode.push(PathM[source][toPath].prev_node);
+                        toPath = PathM[source][toPath].prev_node;
+                    }
+                    
+                    //print path from stack
+                    while (!prevNode.empty()) {
+                        cout << prevNode.top() << " ";
+                        prevNode.pop();
+                    }
+                    cout << to << endl; 
+                    
+                } else cout << endl;
+            }
         }
     }
-    cout << "\n Shortest from 3 to 4: " << PathM[3][4].dist << endl;
 }
+
+
+
 
 void GraphM::findShortestPath(){
     for(int source = 1; source <= size; ++source){
@@ -138,18 +163,3 @@ void GraphM::findShortestPath(){
         }
     }
 }
-
-    //              ---- shortest path psuedocode ----
-// for (int source = 1; source <= nodeSize; source++) {
-//       PathM[source][source].dist = 0;
-//       // finds the shortest distance from source to all other nodes
-//       for (int i = 1; i<= nodeSize; i++) {
-//           find v: not visited, shortest distance at this point
-//           mark v visited 
-//          for each w adjacent to v
-//            if (w is not visited)
-//             PathM[source][w].dist=min(PathM[source][w].dist, PathM[source][v].dist+AdjM[V][W])
-//       }
-//    }
-
-
