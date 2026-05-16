@@ -40,6 +40,8 @@ class GraphM {
     //displayAllPaths: outputs all shortest-path distances and paths using cout
     void displayAllPaths();
 
+    //displayPath: outputs the shortest distance path between src to dest using cout (source, destination, distance, path, followed by the names of each node from the path)
+    void displayPath(int src, int dest);
 
     
    private:

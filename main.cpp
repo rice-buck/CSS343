@@ -1,14 +1,13 @@
-#include "graphm.h"
+#include "graphl.h"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 
 int main(){
     ifstream myFile("simple_graph.txt");
 
-    GraphM test;
-    test.buildGraph(myFile);
-
-    test.findShortestPath();
-
-    test.displayAllPaths();
+    GraphL test;
 
 
     return 0;

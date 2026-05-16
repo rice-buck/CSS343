@@ -4,7 +4,7 @@
 #include <stack>
 #include <vector>
 
-#define INF 100 //one billion
+#define INF 1000 //one billion
 
 GraphM::GraphM(){
     size = 0;
@@ -40,14 +40,12 @@ int GraphM::buildGraph(ifstream& file){
     
     //read size
     file >> size;
-    //for tesing 
-    cout << size;
+    file.ignore(); // Clears the '\n' after size 
 
     string line; 
 
     for(int i = 0; i <= size; ++i){
         getline(file, line);
-        cout << line << endl;
         vertices[i] = line;
     }
 
@@ -64,7 +62,6 @@ int GraphM::buildGraph(ifstream& file){
         }
     }
 
-    file.close();
 
     return 1;
 }
@@ -85,6 +82,52 @@ int GraphM::removeEdge(int from, int to){
 
     AdjM[from][to] = INF;
     return 1;
+}
+
+void GraphM::findShortestPath(){
+    for(int source = 1; source <= size; ++source){
+
+        //cleans up previous paths
+        for(int j = 1; j <= size; ++j) {
+            PathM[source][j].dist = INF;
+            PathM[source][j].visited = false;
+            PathM[source][j].prev_node = 0;
+        }
+        
+        PathM[source][source].dist = 0; //distance to itself is zero
+
+        for(int i = 1; i <= size; ++i){
+
+            int vDist = INF;
+            int v = -1; 
+
+            //find shortest from source to all other nodes (find v)
+            for(int findV = 1; findV <= size; ++findV){
+                if(!PathM[source][findV].visited){ //find shortest dist neighbor of source
+                    if(PathM[source][findV].dist < vDist){
+                        vDist = PathM[source][findV].dist;
+                        v = findV;
+                    }
+                }
+            }
+
+            if (v == -1) break; //if a node is disconnected, then v will remain -1
+
+            //mark v visited
+            PathM[source][v].visited = true;
+            PathM[source][v].dist = vDist;
+
+            //explore each w adjacent to v
+            for(int w = 1; w <= size; ++w){
+                if(!PathM[source][w].visited && AdjM[v][w] != INF){
+                    if(PathM[source][v].dist + AdjM[v][w] < PathM[source][w].dist){
+                        PathM[source][w].dist = PathM[source][v].dist + AdjM[v][w];
+                        PathM[source][w].prev_node = v;
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -123,43 +166,40 @@ void GraphM::displayAllPaths(){
     }
 }
 
+//displayPath: outputs the shortest distance path between src to dest using cout (source, destination, distance, path, followed by the names of each node from the path)
+void GraphM::displayPath(int src, int dest){
 
+        string dist;
+        if(PathM[src][dest].dist != INF) dist = to_string(PathM[src][dest].dist);
+        else dist = "---";
 
+        cout << src << "\t" << dest << "\t" << dist << "\t";
 
-void GraphM::findShortestPath(){
-    for(int source = 1; source <= size; ++source){
-        PathM[source][source].dist = 0; //distance to itself is zero
-
-        for(int i = 1; i <= size; ++i){
-
-            int vDist = INF;
-            int v = -1; 
-
-            //find shortest from source to all other nodes (find v)
-            for(int findV = 1; findV <= size; ++findV){
-                if(!PathM[source][findV].visited){ //find shortest dist neighbor of source
-                    if(PathM[source][findV].dist < vDist){
-                        vDist = PathM[source][findV].dist;
-                        v = findV;
-                    }
-                }
+        //print path
+        if(dist != "---"){
+            stack<int> prevNode;
+            stack<string> nodeName; 
+            int toPath = dest;
+            
+            while(PathM[src][toPath].prev_node != 0){
+                prevNode.push(PathM[src][toPath].prev_node);
+                nodeName.push(vertices[toPath]);
+                toPath = PathM[src][toPath].prev_node;
             }
-
-            if (v == -1) break; //if a node is disconnected, then v will remain -1
-
-            //mark v visited
-            PathM[source][v].visited = true;
-            PathM[source][v].dist = vDist;
-
-            //explore each w adjacent to v
-            for(int w = 1; w <= size; ++w){
-                if(!PathM[source][w].visited && AdjM[v][w] != INF){
-                    if(PathM[source][v].dist + AdjM[v][w] < PathM[source][w].dist){
-                        PathM[source][w].dist = PathM[source][v].dist + AdjM[v][w];
-                        PathM[source][w].prev_node = v;
-                    }
-                }
+            
+            //print path from stack
+            while (!prevNode.empty()) {
+                cout << prevNode.top() << " ";
+                prevNode.pop();
             }
-        }
-    }
+            cout << dest << endl; 
+
+            //print names
+            cout << vertices[src] << endl;
+            while (!nodeName.empty()) {
+                cout << nodeName.top() << endl;
+                nodeName.pop();
+            }
+            cout << "\n\n";
+        } else cout << "\n\n";
 }
