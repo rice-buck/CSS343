@@ -1,12 +1,14 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
-#define MAXNODES 100 //not sure how this should be defined?
+#include <sstream>
 
 using namespace std;
 
+const int MAXNODES = 101;
+
 struct EdgeNode;      // forward reference for the compiler
+
 
 struct GraphNode {    
     EdgeNode* edgeHead; // head of the list of edges
@@ -29,7 +31,8 @@ class GraphL {
     //destructor
     ~GraphL();
 
-    //buildGraph: builds the graph's node information and adjacency list by reading from a data file. Edge weights in the file must be ignored. Return -1 if fail. Otherwise, return 1.
+    //buildGraph: builds the graph's node information and adjacency list by reading from a data file. Edge weights in the file must be ignored. 
+    // Return -1 if fail. Otherwise, return 1.
     int buildGraph(ifstream& file);
 
     //getSize: return the "size" of the graph (# of nodes)
@@ -59,4 +62,5 @@ class GraphL {
    private:
       // array of GraphNodes
       GraphNode *nodeArray;
+      int size;
 };

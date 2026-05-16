@@ -9,6 +9,12 @@ int main(){
 
     GraphL test;
 
+    test.buildGraph(myFile);
+
+    test.displayGraph();
+
+    cout << test.DFSorder() << endl;
+
 
     return 0;
 }
