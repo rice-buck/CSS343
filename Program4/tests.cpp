@@ -3,6 +3,7 @@
 //   g++ -std=c++17 -Wall test_hashtable.cpp -o test_hashtable
 
 #include <cassert>
+#include <sstream>
 #include <iostream>
 #include <string>
 #include "HashTable.h"
@@ -148,6 +149,69 @@ static void test_auto_rehash() {
     }
 }
 
+// ---------- print ----------
+static void test_print() {
+    // Empty table: header should reflect size=0, all buckets empty.
+    {
+        HashTable<std::string, int> t;
+        std::ostringstream oss;
+        t.print(oss);
+        std::string out = oss.str();
+
+        assert(out.find("size=0")        != std::string::npos);
+        assert(out.find("capacity=16")   != std::string::npos);
+        assert(out.find("16 empty")      != std::string::npos);
+    }
+
+    // Non-empty table: every key and value should appear somewhere.
+    {
+        HashTable<std::string, int> t;
+        t.insert("apple",  1);
+        t.insert("banana", 2);
+        t.insert("cherry", 3);
+
+        std::ostringstream oss;
+        t.print(oss);
+        std::string out = oss.str();
+
+        assert(out.find("size=3") != std::string::npos);
+        assert(out.find("apple")  != std::string::npos);
+        assert(out.find("banana") != std::string::npos);
+        assert(out.find("cherry") != std::string::npos);
+        assert(out.find("=1")     != std::string::npos);
+        assert(out.find("=2")     != std::string::npos);
+        assert(out.find("=3")     != std::string::npos);
+    }
+
+    // Collision rendering: force two keys into the same bucket so the
+    // chain "->" arrow appears. std::hash<int> is effectively the identity
+    // on common stdlibs, so hash(0) % 4 == hash(4) % 4 == 0 deterministically.
+    {
+        HashTable<int, std::string> t(4);
+        t.insert(0, "zero");
+        t.insert(4, "four");
+
+        std::ostringstream oss;
+        t.print(oss);
+        std::string out = oss.str();
+
+        assert(out.find("zero") != std::string::npos);
+        assert(out.find("four") != std::string::npos);
+        assert(out.find("->")   != std::string::npos);   // chain arrow
+    }
+
+    // Verify the function honors the passed stream — if it wrote to cout
+    // instead, the ostringstream would be empty.
+    {
+        HashTable<std::string, int> t;
+        t.insert("test", 42);
+
+        std::ostringstream oss;
+        t.print(oss);
+        assert(!oss.str().empty());
+    }
+}
+
 int main() {
     test_insert_and_find();      std::cout << "  insert/find       OK\n";
     test_update_existing_key();  std::cout << "  update key        OK\n";
@@ -158,6 +222,7 @@ int main() {
     test_forEach();              std::cout << "  forEach           OK\n";
     test_manual_rehash();        std::cout << "  manual rehash     OK\n";
     test_auto_rehash();          std::cout << "  auto rehash       OK\n";
+    test_print();                std::cout << "  print             OK\n";
     std::cout << "All tests passed.\n";
     return 0;
 }

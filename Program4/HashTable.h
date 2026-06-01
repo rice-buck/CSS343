@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include <cstddef>
 #include <functional>
@@ -53,6 +54,9 @@ class HashTable {
 
     // Rebuilds table with new capacity
     void rehash(size_t newCapacity);
+
+    // Print table
+    void print(std::ostream& os = std::cout) const;
 };
 
 // ----- implementations  -----
@@ -158,6 +162,28 @@ void HashTable<K, V>::forEach(std::function<void(const K&, V&)> fn) {
         for (Node<K, V>* n = head; n; n = n->next) {
             fn(n->key, n->value);
         }
+    }
+}
+
+template <typename K, typename V>
+void HashTable<K, V>::print(std::ostream& os) const {
+    os << "HashTable [size=" << size_
+       << ", capacity=" << capacity_ << "]\n";
+
+    size_t emptyBuckets = 0;
+    for (size_t i = 0; i < capacity_; ++i) {
+        if (!buckets_[i]) { ++emptyBuckets; continue; }
+
+        os << "  [" << i << "] ";
+        for (const Node<K, V>* n = buckets_[i]; n; n = n->next) {
+            os << n->key << "=" << n->value;
+            if (n->next) os << " -> ";
+        }
+        os << "\n";
+    }
+    if (emptyBuckets > 0) {
+        os << "  (" << emptyBuckets << " empty bucket"
+           << (emptyBuckets == 1 ? "" : "s") << ")\n";
     }
 }
 
