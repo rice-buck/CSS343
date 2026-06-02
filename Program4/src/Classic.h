@@ -16,4 +16,6 @@ std::string getActor();
 
 //getMonth
 int getMonth();
+
+void print(std::ostream& os) const;
 };

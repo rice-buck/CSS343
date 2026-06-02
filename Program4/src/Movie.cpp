@@ -1,5 +1,7 @@
 #include "Movie.h"
 #include <stdexcept>
+#include <atomic>
+#include <cstdint>
 
 //╰（‵□′）╯
 
@@ -19,6 +21,14 @@ Movie::Movie(char gen, int stk, const std::string& movieT, const std::string& di
 
     if(direc == "") throw std::invalid_argument("Error: Director cannot be empty!");
     }
+//default constructor
+Movie::Movie() {
+genre = ' ';
+stock = 0;
+title = "";
+director = "";
+year = 0;
+}
     
 
 //getGenre
@@ -32,10 +42,8 @@ int Movie::getStock(){
 }
 
 //setStock
-bool Movie::setStock(int newStock){
-    if(stock < 0) return false;
-
-    return stock = newStock;
+void Movie::setStock(int newStock){
+    if(newStock >= 0) stock = newStock;
 }
 
 //getMovieTitle
@@ -59,7 +67,19 @@ std::string Movie::genHashKey(){
     return "boo-yah!";
 }
 
-//compare()
-//not sure what this is for again... 
+//gen unique id
+uint64_t Movie::generateUniqueId() {
+    // Thread-safe static counter initialized once
+    static std::atomic<uint64_t> currentId{1}; 
+    // Securely adds 1 and returns the previous unique number
+    return currentId.fetch_add(1); 
+}
 
+void Movie::print(std::ostream& os) const{
+    os << genre << " " << stock << " " << title << " " << director << " " << year;
+}
 
+std::ostream& operator<<(std::ostream& os, const Movie& movie){
+     movie.print(os);
+    return os;
+}

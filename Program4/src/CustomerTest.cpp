@@ -14,5 +14,7 @@ int main() {
     std::cout << "Customer History:" << std::endl;
     customer1.printHistory();
 
+    std::cout << customer1 << std::endl;
+
     return 0;
 }

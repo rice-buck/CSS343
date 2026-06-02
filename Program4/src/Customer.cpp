@@ -1,7 +1,7 @@
 #include "Customer.h"
 #include <iostream>
 #include <stack>
-#pragma once
+
 
 //constructor 
 Customer::Customer(int ID, std::string fName, std::string lName) : CustomerID(ID), firstName(fName), lastName(lName) {}
@@ -38,4 +38,8 @@ void Customer::printHistory(){
         std::cout << tempStack.top() << std::endl;
         tempStack.pop();
     }
+}
+
+std::ostream& operator<<(std::ostream& os, const Customer& cust){
+    return os << cust.firstName << " " << cust.lastName << " " << cust.CustomerID; 
 }

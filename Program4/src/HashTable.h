@@ -1,9 +1,9 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include <cstddef>
 #include <functional>
 #include "Node.h"
-
 
 template <typename K, typename V>
 class HashTable {
@@ -39,8 +39,11 @@ class HashTable {
     // Remove value from table
     bool remove(const K& key);
 
-    // Search for key
+    // Search for key (const version)
     const V* find(const K& key) const;
+
+    // Search for key (non-const version)
+    V* find(const K& key);
 
     // Checks if table contains value
     bool contains(const K& key) const { return find(key) != nullptr; }
@@ -54,6 +57,9 @@ class HashTable {
 
     // Rebuilds table with new capacity
     void rehash(size_t newCapacity);
+
+    // Print table
+    void print(std::ostream& os = std::cout) const;
 };
 
 // ----- implementations  -----
@@ -154,11 +160,43 @@ const V* HashTable<K, V>::find(const K& key) const {
 }
 
 template <typename K, typename V>
+V* HashTable<K, V>::find(const K& key) {
+    for (Node<K, V>* n = buckets_[hash(key)]; n; n = n->next) {
+        if (n->key == key) return &n->value;
+    }
+    return nullptr;
+}
+
+
+
+template <typename K, typename V>
 void HashTable<K, V>::forEach(std::function<void(const K&, V&)> fn) {
     for (Node<K, V>* head : buckets_) {
         for (Node<K, V>* n = head; n; n = n->next) {
             fn(n->key, n->value);
         }
+    }
+}
+
+template <typename K, typename V>
+void HashTable<K, V>::print(std::ostream& os) const {
+    os << "HashTable [size=" << size_
+       << ", capacity=" << capacity_ << "]\n";
+
+    size_t emptyBuckets = 0;
+    for (size_t i = 0; i < capacity_; ++i) {
+        if (!buckets_[i]) { ++emptyBuckets; continue; }
+
+        os << "  [" << i << "] ";
+        for (const Node<K, V>* n = buckets_[i]; n; n = n->next) {
+            os << n->key << "=" << n->value;
+            if (n->next) os << " -> ";
+        }
+        os << "\n";
+    }
+    if (emptyBuckets > 0) {
+        os << "  (" << emptyBuckets << " empty bucket"
+           << (emptyBuckets == 1 ? "" : "s") << ")\n";
     }
 }
 

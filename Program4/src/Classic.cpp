@@ -17,3 +17,7 @@ std::string Classic::getActor(){
 int Classic::getMonth(){
     return month;
 }
+
+void Classic::print(std::ostream& os) const{
+    os << genre << " " << stock << " " << title << " " << director << " " << actor << " " << month << " " << year;
+}

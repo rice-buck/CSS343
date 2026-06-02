@@ -1,5 +1,6 @@
 #include <stack>
 #include <string>
+#pragma once
 
 class Customer{
 private:
@@ -25,4 +26,6 @@ void addTransaction(std::string transac);
 std::stack<std::string>getHistory();
 
 void printHistory();
+
+friend std::ostream& operator<<(std::ostream& os, const Customer& cust);
 };
