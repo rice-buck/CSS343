@@ -23,7 +23,7 @@ int main(){
     dB.addMovie(testDrama);
     dB.addMovie(testComedy);
     dB.addMovie(testClassic);
-    dB.invetory();
+    dB.inventory();
     dB.borrowMovie(111, 2);
     dB.returnMovie(111, 3);
 
@@ -34,9 +34,9 @@ int main(){
     std::cout << "end history\n" << std::endl;
 
     std::cout << "\n";
-    dB.invetory();
+    dB.inventory();
 
     std::cout << "\n";
     dB.customers.print();
-   
+
 }

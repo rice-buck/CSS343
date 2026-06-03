@@ -90,7 +90,7 @@ Movie* Operations::parseMovieRecord(const std::string& line) {
         case 'F': {                                  // Comedy
             try {
                 int year = std::stoi(tail);
-                return new Comedy(stock, director, title, year);
+                return new Comedy(code, stock, director, title, year);
             } catch (...) {
                 std::cerr << "Operations: bad year in comedy: " << line << "\n";
                 return nullptr;
@@ -99,7 +99,7 @@ Movie* Operations::parseMovieRecord(const std::string& line) {
         case 'D': {                                  // Drama
             try {
                 int year = std::stoi(tail);
-                return new Drama(stock, director, title, year);
+                return new Drama(code, stock, director, title, year);
             } catch (...) {
                 std::cerr << "Operations: bad year in drama: " << line << "\n";
                 return nullptr;
@@ -124,8 +124,7 @@ Movie* Operations::parseMovieRecord(const std::string& line) {
                     if (i) actor += ' ';
                     actor += tokens[i];
                 }
-                return new Classic(stock, director, title,
-                                   month, year, actor);
+                return new Classic(code, stock, title,director, actor, month, year);
             } catch (...) {
                 std::cerr << "Operations: bad month/year in classic: "
                           << line << "\n";
