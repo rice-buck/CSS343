@@ -26,7 +26,7 @@ void Database::borrowMovie(int ID, int movieKey){
         std::string transaction;
         transaction = std::string("Borrowed: ") + movieIt->getGenre() + " " + movieIt->getMovieTitle() + " " + movieIt->getDirector() + " " + std::to_string(movieIt->getYear());
         customers.find(ID)->addTransaction(transaction);
-    } 
+    }
 }
 
 //LATER: make sure people cant add movies they dont own
@@ -42,7 +42,7 @@ void Database::returnMovie(int ID, int movieKey){
     }
 }
 
-void Database::invetory(){
+void Database::inventory(){
     movies.print();
 }
 

@@ -4,9 +4,9 @@
 
 class Database{
 
-public: 
+public:
 
-HashTable<int, Movie> movies; 
+HashTable<int, Movie> movies;
 HashTable<int, Customer> customers;
 
 Database();
@@ -21,7 +21,7 @@ void borrowMovie(int ID, int movieKey);
 
 void returnMovie(int ID, int movieKey);
 
-void invetory();
+void inventory();
 
 void history(int ID);
 
