@@ -25,9 +25,7 @@ int main(){
     dB.addMovie(testClassic);
     dB.invetory();
     dB.borrowMovie(111, 2);
-    testCust.addTransaction("borrowed comedy");
     dB.returnMovie(111, 3);
-    testCust.addTransaction("borrowed Drama");
 
     std::cout << "\nTesting history" << std::endl;
     std::cout << "---------------\n";

@@ -1,13 +1,11 @@
 #include "Movie.h"
 #include <stdexcept>
-#include <atomic>
-#include <cstdint>
 
 //╰（‵□′）╯
 
 //constructor
 Movie::Movie(char gen, int stk, const std::string& movieT, const std::string& direc, int yr) 
-    : genre(gen), stock(stk), title(movieT), director(direc), year(yr) {
+    : genre(gen), stock(stk), title(movieT), director(direc), year(yr), movieID(0) {
     //error handling  idk if throwing an exception is the best way for error handling or not???
     //would have to implement try catch block where ever objects are instantiated (eg. main)...
     if(gen != 'F' && gen != 'D' && gen != 'C' ) {
@@ -22,13 +20,7 @@ Movie::Movie(char gen, int stk, const std::string& movieT, const std::string& di
     if(direc == "") throw std::invalid_argument("Error: Director cannot be empty!");
     }
 //default constructor
-Movie::Movie() {
-genre = ' ';
-stock = 0;
-title = "";
-director = "";
-year = 0;
-}
+Movie::Movie() : genre(' '), stock(0), title(""), director(""), year(0), movieID(0) {}
     
 
 //getGenre
@@ -61,18 +53,18 @@ int Movie::getYear(){
     return year;
 }
 
+int Movie::getMovieID() const {
+    return movieID;
+}
+
+void Movie::setMovieID(int id) {
+    movieID = id;
+}
+
 //hashKey
 //not sure how we should do this yet
 std::string Movie::genHashKey(){
     return "boo-yah!";
-}
-
-//gen unique id
-uint64_t Movie::generateUniqueId() {
-    // Thread-safe static counter initialized once
-    static std::atomic<uint64_t> currentId{1}; 
-    // Securely adds 1 and returns the previous unique number
-    return currentId.fetch_add(1); 
 }
 
 void Movie::print(std::ostream& os) const{

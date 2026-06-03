@@ -11,7 +11,7 @@ HashTable<int, Customer> customers;
 
 Database();
 
-void addMovie(Movie newMovie);
+int addMovie(Movie& newMovie);
 
 void addCustomer(Customer newCust);
 
@@ -25,5 +25,6 @@ void invetory();
 
 void history(int ID);
 
-
+private:
+    int nextMovieID;
 };

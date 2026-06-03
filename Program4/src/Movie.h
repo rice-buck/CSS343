@@ -12,6 +12,8 @@ std::string title;
 std::string director;
 int year;
 
+private:
+int movieID;
 
 public:
 
@@ -39,10 +41,11 @@ std::string getDirector();
 //getYear
 int getYear();
 
+int getMovieID() const;
+void setMovieID(int id);
+
 //hashKey
 std::string genHashKey();
-
-uint64_t generateUniqueId();
 
 void print(std::ostream& os) const;
 

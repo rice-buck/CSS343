@@ -2,11 +2,13 @@
 #include <ostream>
 #include <string>
 
-Database::Database() {}
+Database::Database() : nextMovieID(1) {}
 
-
-void Database::addMovie(Movie newMovie){
-    movies.insert(newMovie.generateUniqueId(), newMovie);
+int Database::addMovie(Movie& newMovie){
+    int id = nextMovieID++;
+    newMovie.setMovieID(id);
+    movies.insert(id, newMovie);
+    return id;
 }
 
 void Database::addCustomer(Customer newCust){
@@ -24,8 +26,7 @@ void Database::borrowMovie(int ID, int movieKey){
         std::string transaction;
         transaction = std::string("Borrowed: ") + movieIt->getGenre() + " " + movieIt->getMovieTitle() + " " + movieIt->getDirector() + " " + std::to_string(movieIt->getYear());
         customers.find(ID)->addTransaction(transaction);
-    }
-    
+    } 
 }
 
 //LATER: make sure people cant add movies they dont own
