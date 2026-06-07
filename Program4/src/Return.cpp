@@ -1,7 +1,8 @@
 #include "Return.h"
 
-Return::Return(Database& db, int cID, int mID) : Transaction(db), customerID(cID), movieID(mID) {}
+Return::Return(Database& db, int cID, const std::string& mKey)
+    : Transaction(db), customerID(cID), movieKey(mKey) {}
 
 void Return::doTrans() {
-    dB.returnMovie(customerID, movieID);
+    dB.returnMovie(customerID, movieKey);
 }

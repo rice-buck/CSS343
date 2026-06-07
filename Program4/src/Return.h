@@ -1,13 +1,14 @@
+#pragma once
+#include <string>
 #include "Transaction.h"
 
 class Return : public Transaction {
 private:
-int customerID;
-int movieID;
+    int customerID;
+    std::string movieKey;
 
-public: 
-Return(Database& db, int cID, int mID);
+public:
+    Return(Database& db, int cID, const std::string& mKey);
 
-void doTrans() override;
-
+    void doTrans() override;
 };

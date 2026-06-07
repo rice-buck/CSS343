@@ -1,21 +1,23 @@
+#pragma once
 #include "Movie.h"
 
-
-//classic publicly inherits from Movie
 class Classic : public Movie {
 private:
-int month;
-std::string actor; 
+    int month;
+    std::string actor;
 
 public:
-//constructor
-Classic(char gen, int stk, const std::string& movieT, const std::string& direc, const std::string& act, int mo, int yr);
+    // Full constructor — used when loading the movie file.
+    Classic(char gen, int stk, const std::string& movieT,
+            const std::string& direc, const std::string& act,
+            int mo, int yr);
 
-//getActor
-std::string getActor();
+    // Stub constructor — used only for command lookup (genHashKey only).
+    Classic(int mo, int yr, const std::string& act);
 
-//getMonth
-int getMonth();
+    std::string getActor() const;
+    int getMonth() const;
 
-void print(std::ostream& os) const;
+    std::string genHashKey() const override;
+    void print(std::ostream& os) const override;
 };

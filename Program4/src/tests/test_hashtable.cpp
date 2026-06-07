@@ -5,7 +5,7 @@
 #include <cassert>
 #include <iostream>
 #include <string>
-#include "HashTable.h"
+#include "../HashTable.h"
 
 // ---------- basic insert / find ----------
 static void test_insert_and_find() {

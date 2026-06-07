@@ -1,13 +1,15 @@
+#pragma once
 #include "Movie.h"
 
-
-//drama publicly inherits from Movie
 class Drama : public Movie {
-
 public:
-//constructor
-Drama(char gen, int stk, const std::string& movieT, const std::string& direc, int yr);
+    // Full constructor — used when loading the movie file.
+    Drama(char gen, int stk, const std::string& movieT,
+          const std::string& direc, int yr);
 
-void print(std::ostream& os) const;
+    // Stub constructor — used only for command lookup (genHashKey only).
+    Drama(const std::string& direc, const std::string& movieT);
+
+    std::string genHashKey() const override;
+    void print(std::ostream& os) const override;
 };
-

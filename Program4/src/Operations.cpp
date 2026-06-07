@@ -44,7 +44,7 @@ void Operations::readMovies(const std::string& filename, Database& db) {
     while (std::getline(in, line)) {
         if (trim(line).empty()) continue;
         if (Movie* m = parseMovieRecord(line)) {
-            db.addMovie(*m);   // Database takes ownership
+            db.addMovie(m);   // Database takes ownership
         }
     }
 }
@@ -90,7 +90,7 @@ Movie* Operations::parseMovieRecord(const std::string& line) {
         case 'F': {                                  // Comedy
             try {
                 int year = std::stoi(tail);
-                return new Comedy(code, stock, director, title, year);
+                return new Comedy(code, stock, title, director, year);
             } catch (...) {
                 std::cerr << "Operations: bad year in comedy: " << line << "\n";
                 return nullptr;
@@ -99,7 +99,7 @@ Movie* Operations::parseMovieRecord(const std::string& line) {
         case 'D': {                                  // Drama
             try {
                 int year = std::stoi(tail);
-                return new Drama(code, stock, director, title, year);
+                return new Drama(code, stock, title, director, year);
             } catch (...) {
                 std::cerr << "Operations: bad year in drama: " << line << "\n";
                 return nullptr;
@@ -228,8 +228,8 @@ void Operations::readCommands(const std::string& filename, Database& db) {
                     break;
                 }
                 const std::string key = stub->genHashKey();
-                if (action == 'B') db.borrowMovie(id, std::stoi(key));
-                else               db.returnMovie(id, std::stoi(key));
+                if (action == 'B') db.borrowMovie(id, key);
+                else               db.returnMovie(id, key);
                 break;
             }
 
@@ -269,7 +269,7 @@ Operations::parseMovieIdentifier(char type, std::istringstream& iss) {
             std::string yearStr = trim(rest.substr(lastComma + 1));
             try {
                 int year = std::stoi(yearStr);
-                return std::make_unique<Comedy>(0, "", title, year);
+                return std::make_unique<Comedy>(title, year);
             } catch (...) { return nullptr; }
         }
 
@@ -281,9 +281,12 @@ Operations::parseMovieIdentifier(char type, std::istringstream& iss) {
             if (comma == std::string::npos) return nullptr;
             std::string director = trim(rest.substr(0, comma));
             std::string title    = trim(rest.substr(comma + 1));
-            // Year isn't part of drama's identity per the sort rules, so 0
-            // is fine for the stub.
-            return std::make_unique<Drama>(0, director, title, 0);
+            // The command format trails the title with a comma
+            // ("Director, Title,") — strip it so the key matches the
+            // stored title exactly.
+            if (!title.empty() && title.back() == ',') title.pop_back();
+            title = trim(title);
+            return std::make_unique<Drama>(director, title);
         }
 
         case 'C': {
@@ -296,7 +299,7 @@ Operations::parseMovieIdentifier(char type, std::istringstream& iss) {
                 actor += tok;
             }
             if (actor.empty()) return nullptr;
-            return std::make_unique<Classic>(0, "", "", month, year, actor);
+            return std::make_unique<Classic>(month, year, actor);
         }
 
         default:

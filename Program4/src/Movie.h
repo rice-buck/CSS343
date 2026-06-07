@@ -1,54 +1,32 @@
+#pragma once
 #include <string>
 #include <ostream>
-#pragma once
 
-class Movie{
-
+class Movie {
 protected:
-
-char genre;
-int stock;
-std::string title;
-std::string director;
-int year;
-
-private:
-int movieID;
+    char genre;
+    int stock;
+    std::string title;
+    std::string director;
+    int year;
 
 public:
+    Movie();
+    Movie(char gen, int stk, const std::string& movieT,
+          const std::string& direc, int yr);
 
-//default constructor
-Movie();
+    virtual ~Movie() = default;
 
-//constructor
-Movie(char gen, int stk, const std::string& movieT, const std::string& direc, int yr);
+    char getGenre() const;
+    int getStock() const;
+    void setStock(int newStock);
+    std::string getMovieTitle() const;
+    std::string getDirector() const;
+    int getYear() const;
 
-//getGenre
-char getGenre();
+    // Content-based key used for hash-table lookup; each subtype overrides.
+    virtual std::string genHashKey() const;
 
-//getStock
-int getStock();
-
-//setStock
-void setStock(int newStock);
-
-//getMovieTitle
-std::string getMovieTitle();
-
-//getDirector
-std::string getDirector();
-
-//getYear
-int getYear();
-
-int getMovieID() const;
-void setMovieID(int id);
-
-//hashKey
-std::string genHashKey();
-
-void print(std::ostream& os) const;
-
-friend std::ostream& operator<<(std::ostream& os, const Movie& movie);
-
+    virtual void print(std::ostream& os) const;
+    friend std::ostream& operator<<(std::ostream& os, const Movie& movie);
 };
